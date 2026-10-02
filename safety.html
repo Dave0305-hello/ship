@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credential Safety Lab</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #101827, #182c4d, #0c5360);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 25px;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 900px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 25px;
+        padding: 30px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .logo {
+        width: 70px;
+        height: 70px;
+        margin: auto;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        background: linear-gradient(135deg, #00e5ff, #7c4dff);
+        box-shadow: 0 0 30px rgba(0,229,255,.35);
+    }
+
+    h1 {
+        margin-top: 15px;
+        font-size: 32px;
+    }
+
+    .subtitle {
+        color: #b9c9dc;
+        margin-top: 8px;
+    }
+
+    .warning {
+        background: rgba(255,193,7,.12);
+        border: 1px solid rgba(255,193,7,.35);
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        color: #ffe69a;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .card {
+        background: rgba(0,0,0,.18);
+        border-radius: 20px;
+        padding: 22px;
+        border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .card h2 {
+        margin-bottom: 18px;
+        font-size: 20px;
+    }
+
+    label {
+        display: block;
+        margin: 13px 0 7px;
+        color: #c8d5e6;
+    }
+
+    input {
+        width: 100%;
+        padding: 13px;
+        border-radius: 10px;
+        border: 1px solid #40536d;
+        background: #111c2c;
+        color: white;
+        outline: none;
+    }
+
+    input:focus {
+        border-color: #00d9ff;
+        box-shadow: 0 0 0 3px rgba(0,217,255,.1);
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        margin-top: 20px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(90deg, #00c6ff, #7c4dff);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,198,255,.25);
+    }
+
+    .recipient {
+        min-height: 180px;
+        background: #0c1523;
+        border-radius: 15px;
+        padding: 18px;
+        font-family: monospace;
+        color: #8ff5ff;
+        overflow-wrap: anywhere;
+    }
+
+    .empty {
+        color: #71849d;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 45px;
+    }
+
+    .security {
+        margin-top: 20px;
+        padding: 18px;
+        border-radius: 15px;
+        background: rgba(0,255,150,.08);
+        border: 1px solid rgba(0,255,150,.2);
+    }
+
+    .security li {
+        margin: 9px 0;
+        margin-left: 20px;
+        color: #c8eadd;
+    }
+
+    .status {
+        margin-top: 15px;
+        text-align: center;
+        min-height: 24px;
+        font-weight: bold;
+    }
+
+    footer {
+        text-align: center;
+        color: #8294aa;
+        margin-top: 25px;
+        font-size: 13px;
+    }
+
+    @media(max-width:700px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .app {
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 25px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header>
+        <div class="logo">🔐</div>
+        <h1>Credential Safety Lab</h1>
+        <p class="subtitle">
+            An educational simulation for learning about login credentials
+        </p>
+    </header>
+
+    <div class="warning">
+        ⚠️ <strong>Educational Demo:</strong>
+        This app works with fake credentials only.
+        Nothing is sent to a real account or server.
+    </div>
+
+    <div class="grid">
+
+        <!-- Sender -->
+        <div class="card">
+            <h2>👤 Demo Sender</h2>
+
+            <label for="username">Fake Username</label>
+            <input
+                id="username"
+                type="text"
+                placeholder="e.g. student_demo"
+                autocomplete="off"
+            >
+
+            <label for="password">Fake Password</label>
+            <input
+                id="password"
+                type="password"
+                placeholder="e.g. demo12345"
+                autocomplete="off"
+            >
+
+            <button onclick="sendDemo()">
+                📤 Send Demo Credentials
+            </button>
+
+            <div class="status" id="status"></div>
+        </div>
+
+        <!-- Recipient -->
+        <div class="card">
+            <h2>📥 Simulated Recipient</h2>
+
+            <div class="recipient" id="recipient">
+                <div class="empty">
+                    No demo credentials received yet.
+                    <br><br>
+                    Enter fake credentials and press the button.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="security">
+        <h2>🛡️ Security Lessons</h2>
+
+        <ul>
+            <li>Never share your real password with another person.</li>
+            <li>Real login credentials should be protected and transmitted securely.</li>
+            <li>Websites should use secure authentication rather than exposing passwords.</li>
+            <li>Never put real passwords into educational demonstrations.</li>
+            <li>This demonstration stays inside your browser and does not contact a server.</li>
+        </ul>
+    </div>
+
+    <footer>
+        Credential Safety Lab • Educational simulation • No real credentials are transmitted
+    </footer>
+
+</div>
+
+<script>
+
+function sendDemo() {
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const recipient = document.getElementById("recipient");
+    const status = document.getElementById("status");
+
+    if (!username || !password) {
+        status.textContent = "⚠️ Please enter fake demo credentials.";
+        status.style.color = "#ffd166";
+        return;
+    }
+
+    /*
+       IMPORTANT:
+       This is only a local simulation.
+       Nothing is uploaded, transmitted, stored,
+       or sent to another account.
+    */
+
+    recipient.innerHTML = `
+        <div style="margin-bottom:12px;color:#7cffb2;">
+            ✓ DEMO MESSAGE RECEIVED
+        </div>
+
+        <div>
+            Username:
+            <strong>${escapeHTML(username)}</strong>
+        </div>
+
+        <div style="margin-top:10px;">
+            Password:
+            <strong>${escapeHTML(password)}</strong>
+        </div>
+
+        <hr style="border:0;border-top:1px solid #26384f;margin:18px 0;">
+
+        <div style="color:#ffd166;font-family:Arial;">
+            ⚠️ Simulation only — these values never left this browser.
+        </div>
+    `;
+
+    status.textContent = "✓ Demo credentials simulated successfully.";
+    status.style.color = "#7cffb2";
+}
+
+
+function escapeHTML(value) {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+</script>
+
+</body>
+</html>
